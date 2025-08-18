@@ -35,6 +35,14 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.5'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	// JSP
+implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+// JSTL
+implementation 'javax.servlet:jstl:1.2'
+implementation 'jakarta.servlet:jakarta.servlet-api' //스프링부트 3.0 이상
+implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api' //스프링부트 3.0 이상
+implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl' //스프링부트 3.0 이상
+	
 }
 
 tasks.named('test') {
