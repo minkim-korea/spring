@@ -4,19 +4,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.site.controller.FController;
+
 import com.site.dao.MemberMapper;
 import com.site.dto.Member;
 
 @Service
 public class MServiceImpl implements MService {
 
-    private final FController FController;
   @Autowired MemberMapper memberMapper;
-
-    MServiceImpl(FController FController) {
-        this.FController = FController;
-    }
 
   @Override //전체
   public List<Member> selectAll() { 
