@@ -21,7 +21,7 @@ public class MController {
 	public String login() {
 		return "member/login";
 	}
-	//로그인
+	//로그인확인
 	@PostMapping("/member/login")
 	public String login(Member member, Model model) {
 		System.out.println("아이디 : "+member.getId());
@@ -46,7 +46,7 @@ public class MController {
 		return "member/mView";
 	}
 	//리스트
-	@GetMapping("member/mList")
+	@GetMapping("/member/mList")
 	public String mList(Model model) {
 		//db에서 데이터 가져오기
 		List<Member> list = mService.selectAll();
