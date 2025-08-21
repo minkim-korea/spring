@@ -1,0 +1,40 @@
+package com.site.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.site.controller.FController;
+import com.site.dao.MemberMapper;
+import com.site.dto.Member;
+
+@Service
+public class MServiceImpl implements MService {
+
+    private final FController FController;
+  @Autowired MemberMapper memberMapper;
+
+    MServiceImpl(FController FController) {
+        this.FController = FController;
+    }
+
+  @Override //전체
+  public List<Member> selectAll() { 
+	  List<Member> list =memberMapper.selectAll();
+	return list;
+  }
+
+  @Override //로그인
+  public Member selectLogin(String id, String pw) {
+		System.out.println("selectLogin id : "+id);
+		Member member = memberMapper.selectLogin(id,pw);
+	return member;
+  }
+
+  @Override//상세
+  public Member selectOne(String id) {
+		Member member = memberMapper.selectOne(id);
+	return member;
+  }
+  
+}
