@@ -122,15 +122,14 @@
 								  url:"/member/idBtn",
 								  method:"post",
 								  data:{"id":id},
-								  dataType:"text",
+								  dataType:"json",
 								  success:function(data){
-									  if(data=="1"){
-										  alert(id+" :사용가능")
-									  }else{alert(id+ ":아이디 사용불가");
+									  if(data == "1"){
+										  alert(id+" : 아이디 사용가능");
+									  }else{
+										  alert(id+" : 아이디 사용불가");
 									  }
-									  
-									 // alert(data);
-									  console.log(data.flag);
+									  console.log(data);
 								  },
 								  error:function(){
 									  alert("실패");

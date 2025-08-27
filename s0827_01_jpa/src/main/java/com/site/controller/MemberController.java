@@ -33,20 +33,24 @@ public class MemberController {
 	//ajax -> json데이터 전송
 	@ResponseBody
 	@PostMapping("/member/idBtn") // 중복id확인
-	public String idBtn(Member m) {
-		//System.out.println("controller id : "+m.getId());
-		// findById(m.getId) -> service,serviceImpl,repository 
+	public Member idBtn(Member m) {
+		System.out.println("controller id : "+m.getId());
+		// findById(m.getId) -> service,serviceImpl,repository
 		Member member = memberService.findById(m.getId());
+			
 		
 		
-		
-		String flag="";
+		String flag = "";
 		if(member.getId() != null) {
-			flag ="-1"; //사용불가 동일아이디있음
+			flag = "-1"; //아이디 사용불가
 		}else {
-			flag="1";//사용가능한아이디
+			flag = "1";  // 아이디 사용가능
 		}
-		return flag;
+		
+		//Json방법 -> 직접 Json형태로 가공해서 방법
+		// 객체를 전송하면 자동으로 Json형태로 변환되어 전송
+		
+		return member;
 	}
 	
 	@GetMapping("/member/logout") //로그아웃
