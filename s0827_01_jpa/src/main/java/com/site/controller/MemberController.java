@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -21,9 +22,31 @@ public class MemberController {
 	@Autowired MemberService memberService;
 	@Autowired HttpSession session;
 	
-	@GetMapping("/member/insert") //회원가입 페이지열기
+	@GetMapping("/member/insert") //회원가입01 페이지열기
 	public String insert() {
 		return "member/insert01";
+	}
+	@GetMapping("/member/insert02") //회원가입02 페이지열기
+	public String insert02() {
+		return "member/insert02";
+	}
+	//ajax -> json데이터 전송
+	@ResponseBody
+	@PostMapping("/member/idBtn") // 중복id확인
+	public String idBtn(Member m) {
+		//System.out.println("controller id : "+m.getId());
+		// findById(m.getId) -> service,serviceImpl,repository 
+		Member member = memberService.findById(m.getId());
+		
+		
+		
+		String flag="";
+		if(member.getId() != null) {
+			flag ="-1"; //사용불가 동일아이디있음
+		}else {
+			flag="1";//사용가능한아이디
+		}
+		return flag;
 	}
 	
 	@GetMapping("/member/logout") //로그아웃

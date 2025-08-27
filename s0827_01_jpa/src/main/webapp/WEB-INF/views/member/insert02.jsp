@@ -7,10 +7,14 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<link rel="stylesheet" type="text/css" href="css/style_header.css">
-		<link rel="stylesheet" type="text/css" href="css/style_join02_info_input.css">
-		<link rel="stylesheet" type="text/css" href="css/style_footer.css">
+		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="/css/style_header.css">
+		<link rel="stylesheet" type="text/css" href="/css/style_join02_info_input.css">
+		<link rel="stylesheet" type="text/css" href="/css/style_footer.css">
 		<title>회원가입 - 회원정보입력</title>
+		<script>
+		
+		</script>
 	</head>
 	<body>
 		<header>
@@ -48,7 +52,7 @@
 		
 		
 		<section>
-			<form name="agree" method="get" action="join03_success.html">
+			<form action="/member/insert03" name="agree" method="post" >
 				<div id="subBanner"></div>
 				<div id="locationN">
 					<ul>
@@ -100,10 +104,41 @@
 						</dt>
 						<dd>
 							<input type="text" id="id" name="id" minlength="4" maxlength="16" required/>
-							<input type="button" value="중복확인"/>
+							<input type="button" onclick="idBtn()" value="중복확인"/>
 							<span>4~16자리의 영문, 숫자, 특수기호(_)만 사용하실 수 있습니다.</span>
 							<span>첫 글자는 영문으로 입력해 주세요.</span>
 						</dd>
+						<script>
+						   function idBtn(){
+							   let id = $("#id").val();
+							   if(id == null){
+								   alert("아이디를 입력하셔야 중복체크가 가능합니다.");
+								   $("#id").focus();
+								   return;
+							   }
+							   //alert(id+" 아이디 중복체크를 진행합니다.");
+							   //ajax
+							   $.ajax({
+								  url:"/member/idBtn",
+								  method:"post",
+								  data:{"id":id},
+								  dataType:"text",
+								  success:function(data){
+									  if(data=="1"){
+										  alert(id+" :사용가능")
+									  }else{alert(id+ ":아이디 사용불가");
+									  }
+									  
+									 // alert(data);
+									  console.log(data.flag);
+								  },
+								  error:function(){
+									  alert("실패");
+								  }
+								   
+							   });
+						   }
+						</script>
 					</dl>
 					<dl id="join_pw1_dl">
 						<dt>
@@ -179,67 +214,7 @@
 							<input type="text" id="l_tell" name="l_tell" maxlength="4" required />
 						</dd>
 					</dl>
-					<dl id="join_birth_dl">
-						<dt>
-							<div></div>
-							<label for="birth_year">생년월일</label>
-						</dt>
-						<dd>
-							<select id="birth_year" name="birth_year" required>
-								<option selected>선택</option>
-								<option value="1988">1988</option>
-								<option value="1989">1989</option>
-								<option value="1990">1990</option>
-								<option value="1991">1991</option>
-								<option value="1992">1992</option>
-								<option value="1993">1993</option>
-								<option value="1994">1994</option>
-								<option value="1995">1995</option>
-								<option value="1996">1996</option>
-								<option value="1997">1997</option>
-								<option value="1998">1998</option>
-								<option value="1988">1999</option>
-								<option value="1920">2000</option>
-							</select>
-							<span>년</span>
-							<select id="birth_month" name="birth_month" required>
-								<option selected>선택</option>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-								<option value="4">4</option>
-								<option value="5">5</option>
-								<option value="6">6</option>
-								<option value="7">7</option>
-								<option value="8">8</option>
-								<option value="9">9</option>
-								<option value="10">10</option>
-								<option value="11">11</option>
-								<option value="12">12</option>
-							</select>
-							<span>월</span>
-							<select id="birth_day" name="birth_day" required>
-								<option selected>선택</option>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-								<option value="4">4</option>
-								<option value="5">5</option>
-								<option value="6">6</option>
-								<option value="7">7</option>
-								<option value="8">8</option>
-								<option value="9">9</option>
-								<option value="10">10</option>
-							</select>
-							<span>일</span>
-							<div>
-								<input type="radio" name="calendar" id="lunar" value="lunar" checked="checked"/>
-								<label for="lunar">양력</label>
-								<input type="radio" name="calendar" id="solar" value="solar" />
-								<label for="solar">음력</label>
-							</div>
-						</dd>
-					</dl>
+					
 					<dl id="join_gender_dl">
 						<dt>
 							<div></div>
@@ -254,149 +229,47 @@
 							</div>
 						</dd>
 					</dl>
-					<dl id="join_newsletter_dl">
-						<dt>
-							<div></div>
-							<label for="">뉴스레터 수신여부</label>
-						</dt>
-						<dd>
-							<span>이메일을 통한 상품 및 이벤트 정보 수신에 동의합니다.</span>
-							<div>
-								<input type="radio" name="newletter" id="newletter_y" value="yes" checked="checked"/>
-								<label for="newletter_y">예</label>
-								<input type="radio" name="newletter" id="newletter_n" value="no" />
-								<label for="newletter_n">아니오</label>
-							</div>
-						</dd>
-					</dl>
-					<dl id="join_sms_dl">
-						<dt>
-							<div></div>
-							<label for="">SMS 수신여부</label>
-						</dt>
-						<dd>
-							<span>이메일을 통한 상품 및 이벤트 정보 수신에 동의합니다.</span>
-							<div>
-								<input type="radio" name="sms" id="sms_y" value="yes" checked="checked"/>
-								<label for="sms_y">예</label>
-								<input type="radio" name="sms" id="sms_n" value="no" />
-								<label for="sms_n">아니오</label>
-							</div>
-						</dd>
-					</dl>
+					
 				</fieldset>
 
-								
-				<h4>
-					분양 회원 정보 입력 
-					<span>(다구좌 회원일 경우 가지고 계신 카드번호 중 하나를 입력해 주시면 됩니다)</span>
-				</h4>
-				<fieldset class="fieldset_class">
-					<dl id="join_member_number_dl">
-						<dt>
-							<label for="m_number">회원번호</label>
-						</dt>
-						<dd>
-							<input type="text" name="m_number" id="m_number" />
-							<span>하이픈(-)이나 띄어쓰기 없이 입력해 주시기 바랍니다.</span>
-						</dd>
-					</dl>
-					<dl id="join_verification_number_dl">
-						<dt>
-							<label for="v_number">회원인증번호</label>
-						</dt>
-						<dd>
-							<input type="text" name="v_number" id="v_number" />
-							<span>숫자 4자리 입력</span>
-						</dd>
-					</dl>
-				</fieldset>
 				
 				<h4>
 					선택 입력 정보 
 				</h4>
 				<fieldset class="fieldset_class">
-					<dl id="join_job_dl">
-						<dt>
-							<label for="job">직업</label>
-						</dt>
-						<dd>
-							<select id="job" name="job">
-								<option selected>선택</option>
-								<option value="worker">회사원</option>
-								<option value="slef">자영업자</option>
-								<option value="freelancer">프리랜서</option>
-								<option value="housewife">전업주부</option>
-								<option value="student">학생</option>
-								<option value="etc">기타</option>						
-							</select>
-						</dd>
-					</dl>
-					<dl id="join_marital_status_dl">
-						<dt>
-							<label for="">결혼여부</label>
-						</dt>
-						<dd>
-							<input type="radio" name="marital_status" id="marital_status_y" value="yes" />
-							<label for="marital_status_y">예</label>
-							<input type="radio" name="marital_status" id="marital_status_n" value="no" />
-							<label for="marital_status_n">아니오</label>
-						</dd>
-					</dl>
+					
+					
 					<dl id="join_interests_dl">
 						<dt>
-							<label for="">관심사</label>
+							<label for="">취미</label>
 						</dt>
 						<dd>
 							<ul>
 								<li>
-									<input type="checkbox" name="computer" id="computer" value="computer" />
-									<label for="computer">컴퓨터/인터넷</label>
-								</li>
-								<li>
-									<input type="checkbox" name="movie" id="movie" value="movie" />
-									<label for="movie">영화/비디오</label>
-								</li>
-								<li>
-									<input type="checkbox" name="music" id="music" value="music" />
-									<label for="music">음악</label>
-								</li>
-								<li>
-									<input type="checkbox" name="shopping" id="shopping" value="shopping" />
-									<label for="shopping">쇼핑</label>
-								</li>
-								<li>
-									<input type="checkbox" name="game" id="game" value="game" />
+									<input type="checkbox" name="game" id="game" value="게임" />
 									<label for="game">게임</label>
 								</li>
 								<li>
-									<input type="checkbox" name="culture" id="culture" value="culture" />
-									<label for="culture">문화/예술</label>
+									<input type="checkbox" name="golf" id="golf" value="골프" />
+									<label for="golf">골프</label>
 								</li>
 								<li>
-									<input type="checkbox" name="parenting" id="parenting" value="parenting" />
-									<label for="parenting">육아/아동</label>
+									<input type="checkbox" name="swim" id="swim" value="수영" />
+									<label for="swim">수영</label>
 								</li>
 								<li>
-									<input type="checkbox" name="cooking" id="cooking" value="cooking" />
-									<label for="parenting">요리</label>
+									<input type="checkbox" name="run" id="run" value="조깅" />
+									<label for="run">조깅</label>
 								</li>
 								<li>
-									<input type="checkbox" name="interier" id="interier" value="interier" />
-									<label for="interier">인테리어</label>
+									<input type="checkbox" name="book" id="book" value="독서" />
+									<label for="book">독서</label>
 								</li>
 								<li>
-									<input type="checkbox" name="leisure" id="leisure" value="leisure" />
-									<label for="leisure">레저/여가</label>
+									<input type="checkbox" name="cook" id="cook" value="요리" />
+									<label for="cook">요리</label>
 								</li>
-								<li>
-									<input type="checkbox" name="health" id="health" value="health" />
-									<label for="health">건강/다이어트</label>
-								</li>
-								<li>
-									<input type="checkbox" name="fashion" id="fashion" value="fashion" />
-									<label for="fashion">패션/미용</label>
-								</li>
+								
 							</ul>
 						</dd>
 					</dl>
