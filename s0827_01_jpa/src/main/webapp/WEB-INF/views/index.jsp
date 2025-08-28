@@ -13,6 +13,9 @@
 		<script>
 		  if("${flag}"=="1") alert("로그인이 되었습니다.");
 		  if("${flag}"=="-1") alert("로그아웃이 되었습니다.");
+		  if("${flag}"=="-2") alert("수정");
+		  if("${flag}"=="3") alert("삭제");
+		  
 		</script>
 	</head>
 	<body>
@@ -24,12 +27,12 @@
 		 				<li><a href="/member/login">로그인</a></li>
 	 			    </c:if>
 	 			    <c:if test="${session_id != null }">
-		 				<li>${session_name}님</li>
+		 				<li><a href="/member/update?id=${session_id}">${session_name}님</a></li>
 		 				<li><a href="/member/logout">로그아웃</a></li>
 	 			    </c:if>
 	 				<li><a href="/board/list">고객행복센터</a></li>
 	 				<li>배송정보검색</li>
-	 				<li>기프트카드 등록</li>
+	 				<li><a href="/member/list">회원정보리스트</a></li>
 	 			</ul>
 	 		</div>
 	 		<nav>

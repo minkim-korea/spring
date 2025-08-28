@@ -1,6 +1,9 @@
 package com.site.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.site.dto.Member;
@@ -39,6 +42,24 @@ public class MemberServiceImpl implements MemberService {
 	public Member findLogin(String id, String pw) {
 		Member member = memberRepository.findLogin(id,pw).get();
 		return member;
+	}
+
+	@Override //회원전체리스트 
+	public List<Member> findAll() {
+		List<Member> list =memberRepository.findAll(
+				Sort.by(Sort.Order.desc("gender"),Sort.Order.asc("name")));
+		return list;
+	}
+
+	@Override //회원정보저장 
+	public void save(Member m) {
+     memberRepository.save(m);		
+	}
+
+	@Override //회원정보삭제 
+	public void delete(String id) {
+     Member member = memberRepository.findById(id).get();
+     memberRepository.delete(member);
 	}
 
 	

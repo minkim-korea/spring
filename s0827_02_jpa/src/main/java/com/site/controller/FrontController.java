@@ -7,10 +7,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class FrontController {
-	
+
 	@GetMapping({"/","/index"})
-	public String index(@RequestParam(name="flag",defaultValue = "0") int flag , Model model) {
-		//model.addAttribute("flag", flag);
-		return"index" ;
+	public String index(Model model) {
+		return "index";
 	}
+//	@GetMapping({"/","/index"})
+//	public String index(@RequestParam(name="flag",defaultValue = "0") int flag , Model model) {
+//		//model.addAttribute("flag", flag);
+//		return"index" ;
+//	}
+	
 }

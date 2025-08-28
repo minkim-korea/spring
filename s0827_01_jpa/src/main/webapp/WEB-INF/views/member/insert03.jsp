@@ -7,9 +7,9 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<link rel="stylesheet" type="text/css" href="css/style_header.css">
-		<link rel="stylesheet" type="text/css" href="css/style_join03_success.css">
-		<link rel="stylesheet" type="text/css" href="css/style_footer.css">
+		<link rel="stylesheet" type="text/css" href="/css/style_header.css">
+		<link rel="stylesheet" type="text/css" href="/css/style_join03_success.css">
+		<link rel="stylesheet" type="text/css" href="/css/style_footer.css">
 		<title>회원가입 - 회원가입완료</title>
 	</head>
 	<body>

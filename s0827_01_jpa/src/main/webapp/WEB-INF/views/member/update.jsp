@@ -11,7 +11,7 @@
 		<link rel="stylesheet" type="text/css" href="/css/style_header.css">
 		<link rel="stylesheet" type="text/css" href="/css/style_join02_info_input.css">
 		<link rel="stylesheet" type="text/css" href="/css/style_footer.css">
-		<title>회원가입 - 회원정보입력</title>
+		<title>회원정보수정</title>
 		<script>
 		
 		</script>
@@ -52,36 +52,20 @@
 		
 		
 		<section>
-			<form action="/member/insert02" name="agree" method="post" >
+			<form action="/member/update" name="agree" method="post" >
 				<div id="subBanner"></div>
 				<div id="locationN">
 					<ul>
 						<li>HOME</li>
-						<li>회원가입</li>
-						<li>회원정보입력</li>
+						<li>회원수정</li>
+						<li>회원정보수정</li>
 					</ul>
 				</div>
 				
 				<div id="sub_top_area">
-					<h3>회원가입</h3>
+					<h3>회원정보수정</h3>
 				</div>
 				
-				<div id="join_step_div">
-					<ul>
-						<li>
-							<span>STEP.1</span>
-							<p>약관동의</p>
-						</li>
-						<li>
-							<span>STEP.2</span>
-							<p>회원정보</p>
-						</li>
-						<li>
-							<span>STEP.3</span>
-							<p>회원가입완료</p>
-						</li>
-					</ul>
-				</div>
 				
 				<h4>
 					필수 정보 입력 
@@ -94,7 +78,7 @@
 							<label for="name">이름</label>
 						</dt>
 						<dd>
-							<input type="text" id="name" name="name" required/>
+							<input type="text" id="name" name="name" readonly value="${member.name}" required/>
 						</dd>
 					</dl>
 					<dl id="join_id_dl">
@@ -103,10 +87,10 @@
 							<label for="id">아이디</label>
 						</dt>
 						<dd>
-							<input type="text" id="id" name="id" minlength="3" maxlength="16" required/>
+							<input type="text" readonly id="id" name="id" value="${member.id}" minlength="3" maxlength="16" required/>
 							<input type="button" onclick="idBtn()" value="중복확인"/>
-							<span>4~16자리의 영문, 숫자, 특수기호(_)만 사용하실 수 있습니다.첫 글자는 영문으로 입력해 주세요.</span>
-							<span id ="idBtnText">아이디 중복확인을 하셔야 합니다.</span>
+							<span>4~16자리의 영문, 숫자, 특수기호(_)만 사용하실 수 있습니다. 첫 글자는 영문으로 입력해 주세요.</span>
+							<span id="idBtnText">아이디 중복확인을 하셔야 합니다.</span>
 						</dd>
 						<script>
 						   function idBtn(){
@@ -122,16 +106,14 @@
 								  url:"/member/idBtn",
 								  method:"post",
 								  data:{"id":id},
-								  dataType:"text",
+								  dataType:"text",  //text,html,json
 								  success:function(data){
 									  if(data == "1"){
-										  alert(id+" : 아이디 사용가능");
 										  $("#idBtnText").css({"color":"blue","font-weight":"bold"});
-										  $("#idBtnText").text("아이디사용가능");
+										  $("#idBtnText").text("아이디 사용가능!");
 									  }else{
-										  alert(id+" : 아이디 사용불가");
 										  $("#idBtnText").css({"color":"red","font-weight":"bold"});
-										  $("#idBtnText").text("아이디사용불가");
+										  $("#idBtnText").text("아이디 사용불가!");
 									  }
 									  console.log(data);
 								  },
@@ -149,9 +131,9 @@
 							<label for="pw1">비밀번호</label>
 						</dt>
 						<dd>
-							<input type="password" id="pw1" name="pw" minlength="3" required />
+							<input type="password" id="pw1" value="${member.pw}" name="pw" minlength="3" required />
 							<span>영문, 숫자, 특수문자 중 2종류 조합 시 10자리 이상 입력</span>
-							<span>영문, 숫자, 특수문자 모두 조합 시 3자리 이상 입력</span>
+							<span>영문, 숫자, 특수문자 모두 조합 시 8자리 이상 입력</span>
 						</dd>
 					</dl>
 					<dl id="join_pw2_dl">
@@ -161,22 +143,20 @@
 						</dt>
 						<dd>
 							<input type="password" onkeyup="pwCheck()" id="pw2" name="pw2" minlength="3" required />
-							<span  id="pwCheckText">비밀번호를 다시 한번 입력해 주세요.</span>
+							<span id="pwCheckText">비밀번호를 다시 한번 입력해 주세요.</span>
 						</dd>
 					</dl>
 					<script>
-					function pwCheck(){
-						console.log("버튼");
-						if($("#pw1").val() == $("#pw2").val() ){
-							$("#pwCheckText").css({"color":"blue","font-weight":"bold"});
-							$("#pwCheckText").text("비밀번호가 동일합니다.");
-							
-						}else{
-							$("#pwCheckText").css({"color":"red","font-weight":"bold"});
-							$("#pwCheckText").text("비밀번호가 다릅니다. 다시입력해주세요 . ");
-						}
-					}
-					
+					  function pwCheck(){
+						  console.log("버튼");
+						  if($("#pw1").val() == $("#pw2").val()){
+							  $("#pwCheckText").css({"color":"blue","font-weight":"bold"});
+							  $("#pwCheckText").text("비밀번호가 동일합니다.");
+						  }else{
+							  $("#pwCheckText").css({"color":"red","font-weight":"bold"});
+							  $("#pwCheckText").text("비밀번호가 다릅니다. 다시 입력해 주세요.");
+						  }
+					  }
 					</script>
 					<dl id="join_mail_dl">
 						<dt>
@@ -184,7 +164,7 @@
 							<label for="mail_id">이메일</label>
 						</dt>
 						<dd>
-							<input type="text" id="mail_id" name="email1" />
+							<input type="text" id="mail_id" name="email1"  />
 							<span>@</span>
 							<input type="text" id="main_tail" name="email2"  />
 							<select>
@@ -208,12 +188,12 @@
 							<label for="">주소</label>
 						</dt>
 						<dd>
-							<input type="text" id="f_postal" name="zipcode1" />
+							<input type="text" id="f_postal" name="zipcode1"  />
 							<span>-</span>
-							<input type="text" id="l_postal" name="zipcode2" />
+							<input type="text" id="l_postal" name="zipcode2"  />
 							<input type="button" value="우편번호"/>
-							<input type="text" id="address1" name="address1" />
-							<input type="text" id="address2" name="address2" />
+							<input type="text" id="address1" name="address1"  />
+							<input type="text" id="address2" name="address2"  />
 						</dd>
 						
 					</dl>
@@ -224,11 +204,11 @@
 							<label for="f_tell">휴대전화</label>
 						</dt>
 						<dd>
-							<input type="text" id="f_tell" name="phone1" maxlength="3" required />
+							<input type="text" id="f_tell" name="phone1" value="${fn:split(member.phone,'-')[0]}" maxlength="3" required />
 							<span> - </span>
-							<input type="text" id="m_tell" name="phone2" maxlength="4" required />
+							<input type="text" id="m_tell" name="phone2" value="${fn:split(member.phone,'-')[1]}" maxlength="4" required />
 							<span> - </span>
-							<input type="text" id="l_tell" name="phone3" maxlength="4" required />
+							<input type="text" id="l_tell" name="phone3" value="${fn:split(member.phone,'-')[2]}" maxlength="4" required />
 						</dd>
 					</dl>
 					
@@ -239,9 +219,13 @@
 						</dt>
 						<dd>
 							<div>
-								<input type="radio" name="gender" id="male" value="남자" checked="checked"/>
+								<input type="radio" name="gender" id="male" value="남자" 
+								  <c:if test="${fn:contains(member.gender,'남자')}" >checked</c:if>
+								/>
 								<label for="male">남성</label>
-								<input type="radio" name="gender" id="female" value="여자" />
+								<input type="radio" name="gender" id="female" value="여자" 
+								  <c:if test="${fn:contains(member.gender,'여자')}" >checked</c:if>
+								/>
 								<label for="female">여성</label>
 							</div>
 						</dd>
@@ -263,27 +247,39 @@
 						<dd>
 							<ul>
 								<li>
-									<input type="checkbox" name="hobby" id="game" value="게임" />
+									<input type="checkbox" name="hobby" id="game" value="게임" 
+										<c:if test="${fn:contains(member.hobby,'게임')}" >checked</c:if>
+									/>
 									<label for="game">게임</label>
 								</li>
 								<li>
-									<input type="checkbox" name="hobby" id="golf" value="골프" />
+									<input type="checkbox" name="hobby" id="golf" value="골프" 
+										<c:if test="${fn:contains(member.hobby,'골프')}" >checked</c:if>
+									/>
 									<label for="golf">골프</label>
 								</li>
 								<li>
-									<input type="checkbox" name="hobby" id="swim" value="수영" />
+									<input type="checkbox" name="hobby" id="swim" value="수영" 
+										<c:if test="${fn:contains(member.hobby,'수영')}" >checked</c:if>
+									/>
 									<label for="swim">수영</label>
 								</li>
 								<li>
-									<input type="checkbox" name="hobby" id="run" value="조깅" />
+									<input type="checkbox" name="hobby" id="run" value="조깅" 
+										<c:if test="${fn:contains(member.hobby,'조깅')}" >checked</c:if>
+									/>
 									<label for="run">조깅</label>
 								</li>
 								<li>
-									<input type="checkbox" name="hobby" id="book" value="독서" />
+									<input type="checkbox" name="hobby" id="book" value="독서" 
+										<c:if test="${fn:contains(member.hobby,'독서')}" >checked</c:if>
+									/>
 									<label for="book">독서</label>
 								</li>
 								<li>
-									<input type="checkbox" name="hobby" id="cook" value="요리" />
+									<input type="checkbox" name="hobby" id="cook" value="요리" 
+										<c:if test="${fn:contains(member.hobby,'요리')}" >checked</c:if>
+									/>
 									<label for="cook">요리</label>
 								</li>
 								
@@ -292,9 +288,17 @@
 					</dl>
 				</fieldset>
 				<div id="info_input_button">
-					<input type="reset" value="취소하기" />
-					<input type="submit" value="가입하기" />
+					<input type="button" onclick="deleteBtn()" value="회원정보삭제" />
+					<input type="reset" onclick="location.href='/';"  value="수정취소" />
+					<input type="submit" value="회원정보수정" />
 				</div>
+				<script>
+				  function deleteBtn(){
+					  if(confirm("${session_id}님 회원정보를 삭제하시겠습니까?")){
+					  	  location.href="/member/delete";
+					  }
+				  }
+				</script>
 				
 			</form>
 		</section>
