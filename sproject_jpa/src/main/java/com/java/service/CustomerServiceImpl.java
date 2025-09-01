@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,14 @@ public class CustomerServiceImpl implements CustomerService {
 	//영속성 컨텍스트 - 시퀀스 파일
 //	@PersistenceContext private EntityManager entityManager; 
 	
+	
+	@Override //게시글 전체가져오기 - 현재페이지, 페이지당 개수
+	public Page<Board> findAll(Pageable pageable) {
+		Page<Board> pageList = customerRepository.findAll(pageable);
+		return pageList;
+	}
+	
+	
 	@Override //게시글 전체가져오기 - 정렬 : bgroup역순정렬, bstep순차정렬
 	public List<Board> findAll(Sort sort) {
 //		Sort sort = Sort.by("id").descending();
@@ -31,6 +41,8 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public Board findByBno(int bno) {
+		// 조회수 1증가
+		customerRepository.updateHit(bno);
 		// .get():에러처리안함 .orElseGet():빈객체처리 .roElseThrow():예외처리
 		Board board = customerRepository.findById(bno).orElseThrow(
 		 () -> { 
@@ -69,5 +81,20 @@ public class CustomerServiceImpl implements CustomerService {
 //		b.setBdate(new Timestamp(System.currentTimeMillis()));
 //		customerRepository.save(b); //기본메소드
 	}
+
+
+	@Override // 답변달기 저장
+	public void reply(Board b) {
+		// 기존의 답변달기 되어 있는 게시글의 bstep을 모두 1증가 시켜줘야 함.
+		//update board set bstep=bstep+1 where bgroup=#{bgroup} and bstep>#{bstep}
+		customerRepository.reply(b.getBgroup(),b.getBstep());
+		
+		b.setBstep(b.getBstep()+1);
+		b.setBindent(b.getBindent()+1);
+		customerRepository.save(b);
+		
+	}
+
+	
 
 }

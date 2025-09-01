@@ -24,6 +24,8 @@
 <script type="text/javascript" src="/js/idangerous.swiper-2.1.min.js"></script>
 <script type="text/javascript" src="/js/jquery.anchor.js"></script>
 <script type="text/javascript">
+	if("${flag}" == "1") alert("게시글이 수정 되었습니다.");
+	
 	//게시글 삭제
 	function deleteBtn(){
 		if(confirm("${board.bno} 번 게시글을 삭제하시겠습니까?")){
@@ -240,6 +242,11 @@
 
 							감사합니다.
 						</div>
+						<c:if test="${board.bfile != null }">
+						<div class="viewContents">
+							<img src="/upload/${board.bfile}" width="50%" >
+						</div>
+						</c:if>
 					</div>
 
 
@@ -272,9 +279,9 @@
 						<div class="bRight">
 							<ul>
 							    <c:if test="${session_id != null }">
-									<li><a href="/customer/list" class="sbtnMini mw">답변달기</a></li>
+									<li><a href="/customer/reply?bno=${board.bno}" class="sbtnMini mw">답변달기</a></li>
 									<c:if test="${session_id == board.member.id }">
-										<li><a href="/customer/list" class="sbtnMini mw">수정</a></li>
+										<li><a href="/customer/update?bno=${board.bno}" class="sbtnMini mw">수정</a></li>
 										<li><a onclick="deleteBtn()" class="sbtnMini mw">삭제</a></li>
 									</c:if>
 							    </c:if>

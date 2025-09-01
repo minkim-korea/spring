@@ -218,7 +218,7 @@
 			<div id="contents">
 				<div id="mypage">
 					<h2><strong>NOTICE</strong><span>쟈뎅샵 소식을 전해드립니다.</span></h2>
-					<form action="/customer/write" method="post" name="writeFrm">
+					<form action="/customer/write" method="post" name="writeFrm" enctype="multipart/form-data">
 						<div class="checkDivTab">
 							<table summary="분류, 구매여부, 작은이미지, 평가, 제목, 상세 내용 순으로 포토 구매후기를 작성 하실수 있습니다." class="checkTable" border="1" cellspacing="0">
 								<caption>포토 구매후기 작성</caption>
@@ -248,9 +248,30 @@
 									<tr>
 										<th scope="row"><span>파일첨부</span></th>
 										<td>
-											<input type="file" name="file" class="fileType" />
+											<input type="file" name="file" class="fileType" onchange="readUrl(this);" />
 										</td>
 									</tr>
+									<tr>
+										<th scope="row"><span>이미지보기</span></th>
+										<td>
+											<img id="preview" src="" width="300px">
+										</td>
+									</tr>
+									<script>
+									   function readUrl(input){
+										   if (input.files && input.files[0]) { //input type="file"
+											    var reader = new FileReader();
+											    reader.onload = function(e) {
+											      document.getElementById('preview').src = e.target.result;
+											    };
+											    reader.readAsDataURL(input.files[0]);
+											  } else {
+											    document.getElementById('preview').src = "";
+											  }
+
+									   }
+									
+									</script>
 																
 								</tbody>
 							</table>
