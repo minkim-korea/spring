@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="../layout/header.jsp" %>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script type="text/javascript">
 	if("${flag}" == "1") alert("게시글이 수정 되었습니다.");
 	
@@ -87,73 +88,234 @@
 							<tbody>
 								<tr>
 									<th class="pre">PREV</th>
-									<td><a href="#">상품 재입고는 언제 되나요?</a></td>
+									<c:if test="${preBoard != null }">
+										<td><a href="/customer/view?bno=${preBoard.bno}">${preBoard.btitle}</a></td>
+									</c:if>
+									<c:if test="${preBoard == null }">
+										<td>이전글이 없습니다.</td>
+									</c:if>
 								</tr>
 
 								<tr>
 									<th class="next">NEXT</th>
-									<td>다음 글이 없습니다.</td>
+									<c:if test="${nextBoard != null }">
+										<td><a href="/customer/view?bno=${nextBoard.bno}">${nextBoard.btitle}</a></td>
+									</c:if>
+									<c:if test="${nextBoard == null }">
+										<td>다음글이 없습니다.</td>
+									</c:if>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 					<!-- //이전다음글 -->
 		<script>
-			function replyBtn(){
-				alert("하단댓글을 저장합니다.");
-				console.log("rpw : "+$(".replynum").val());
-				console.log("rcontent : "+$(".replyType").val());
+						
+			//jquery선언			
+			$(function(){
+				// 전역변수 선언
+				let id = '';
+				let rpw = '';
+				let rcontent = '';
 				
-				var rpw = $(".replynum").val();
-				var rcontent = $(".replyType").val();
+				let rdate = '';
+				let updateFlag = 0;
+				let rno = 1;
 				
-				//ajax 전송
-				$.ajax({
-					url:"/reply/write",
-					method:"post",
-					data:{"id":"${session_id}","bno":"${board.bno}",
-						"rpw":rpw,"rcontent":rcontent},
-					dataType:"json", //"json" - 데이터를 받음
-					success:function(data){
-						// 댓글개수증가
-						var replyCount = $(".replyCount").text();
-						var replyCount = Number(replyCount)+1;
-						$(".replyCount").text(replyCount);
-						//출력
-						console.log(data);
-						console.log("댓글번호 : "+data.rno);
-						console.log("댓글내용 : "+data.rcontent);
-						console.log("게시글번호 : "+data.board.bno);
-						console.log("회원아이디 : "+data.member.id);
-						//변수
-						var rno = data.rno;
-						var rcontent = data.rcontent;
-						var id = data.member.id;
-						var rdate = data.rdate ;
-						// html소스를 추가
-						var dhtml = `
-						<ul id=`+rno+`>
-							<li class="name">`+id+` <span>[`+rdate+`]</span></li>
-							<li class="txt">`+rcontent+`</li>
+				// 하단댓글 추가
+				$(document).on("click",".replyBtn",function(){
+					alert("하단댓글을 저장합니다.");
+					console.log("rpw : "+$(".replynum").val());
+					console.log("rcontent : "+$(".replyType").val());
+					
+					rpw = $(".replynum").val();
+					rcontent = $(".replyType").val();
+					
+					//ajax 전송
+					$.ajax({
+						url:"/reply/write",
+						method:"post",
+						data:{"id":"${session_id}","bno":"${board.bno}",
+							"rpw":rpw,"rcontent":rcontent},
+						dataType:"json", //"json" - 데이터를 받음
+						success:function(data){
+							// 댓글개수증가
+							var replyCount = $(".replyCount").text();
+							var replyCount = Number(replyCount)+1;
+							$(".replyCount").text(replyCount);
+							//출력
+							console.log(data);
+							console.log("댓글번호 : "+data.rno);
+							console.log("댓글내용 : "+data.rcontent);
+							console.log("게시글번호 : "+data.board.bno);
+							console.log("회원아이디 : "+data.member.id);
+							//변수
+							var rno = data.rno;
+							var rcontent = data.rcontent;
+							var id = data.member.id;
+							var rdate = data.rdate ;
+							// html소스를 추가
+							var dhtml = `
+							<ul id=`+rno+`>
+								<li class="name">`+id+` <span>[`+rdate+`]</span></li>
+								<li class="txt">`+rcontent+`</li>
+								<li class="btn">
+									<a class="updateBtn rebtn">수정</a>
+									<a class="deleteBtn rebtn">삭제</a>
+								</li>
+							</ul>
+							`;
+							
+							$(".replyBox").prepend(dhtml); //html태그추가
+							
+						},
+						error:function(){
+							alert("실패");
+						}
+					});
+					
+					//완료후
+					$(".replynum").val("");
+					$(".replyType").val("");
+					
+					
+				});//replyBtn
+				
+				
+				
+				
+				
+				
+				// 정적,동적html 형태 모두 실행됨.
+				// 모두 삭제 가능
+				$(document).on("click",".deleteBtn",function(){
+					console.log("rno번호 : "+$(this).closest("ul").attr("id"));
+					rno = $(this).closest("ul").attr("id");
+					
+					if(confirm(rno+"번 하단댓글을 삭제하시겠습니까?")){
+						alert(rno+"번 하단댓글을 삭제합니다.");
+						//ajax선언
+						$.ajax({
+							url:"/reply/delete",
+							method:"delete",
+							data:{"rno":rno},
+							dataType:"text", //text,json
+							success:function(data){
+								//alert("성공");
+								console.log(data);
+								
+								// 댓글개수감소
+								var replyCount = $(".replyCount").text();
+								var replyCount = Number(replyCount)-1;
+								$(".replyCount").text(replyCount);
+							},
+							error:function(){
+								alert("실패");
+								location.href="/board/list";
+							}
+						});//ajax
+						// html에서 삭제함
+						$("#"+rno).remove();
+					}//ajax
+				});//deleteBtn
+				
+				//수정 화면 열기
+				$(document).on("click",".updateBtn",function(){
+					// updateFlag가 0일때만 화면 열기, 1이면 화면 열기 실행 안됨.
+					if (updateFlag == 0){
+						updateFlag = 1; // 수정화면이 열려 있는 상태
+						console.log("rno번호 : "+$(this).closest("ul").attr("id"));
+						rno = $(this).closest("ul").attr("id");
+						// 전역변수 - id,rcontent,rdate
+						id = '${session_id}';
+						rcontent = $(this).closest("ul").children(".txt").text();
+						rdate = $(this).closest("ul").children(".name").children("span").text();
+						console.log("id",id);
+						console.log("rcontent",rcontent);
+						console.log("rdate",rdate);
+						
+						let dhtml = `<li class="name"> `+id+` <span> `+rdate+` </span></li>
+							<li class="txt"><textarea class="replyType">`+rcontent+`</textarea></li>
 							<li class="btn">
-								<a class="updateBtn rebtn">수정</a>
-								<a class="deleteBtn rebtn">삭제</a>
-							</li>
-						</ul>
-						`;
+								<a class="confirmBtn rebtn">확인</a>
+								<a class="cancelBtn rebtn">취소</a>
+							</li>`;
 						
-						$(".replyBox").prepend(dhtml); //html태그추가
-						
-					},
-					error:function(){
-						alert("실패");
+						$("#"+rno).html(dhtml);
+					}else{
+						alert("하단댓글 수정화면이 열려 있습니다.\n수정완료후 수정버튼을 클릭하세요.");
 					}
-				});
+				});//updateBtn
 				
-				//완료후
-				$(".replynum").val("");
-				$(".replyType").val("");
-			}
+				
+				//수정취소
+				$(document).on("click",".cancelBtn",function(){
+					alert("하단댓글 수정을 취소합니다.");
+					console.log("------하단댓글 수정 취소------");
+					console.log("rno",rno);
+					console.log("id",id);
+					console.log("rcontent",rcontent);
+					console.log("rdate",rdate);
+					
+					let dhtml = `<li class="name">`+id+` <span> `+rdate+` </span></li>
+						<li class="txt">`+rcontent+`</li>
+						<li class="btn">
+							<a class="updateBtn rebtn">수정</a>
+							<a class="deleteBtn rebtn">삭제</a>
+						</li>`;
+					
+					$("#"+rno).html(dhtml);
+					updateFlag = 0;
+				});//cancelBtn
+				
+				//정적html에서만 구동 , 동적html추가된 형태는 구동되지 않음
+				// 최초 불러온 list는 삭제가 가능하지만, 댓글추가된 댓글은 삭제 안됨.
+				//$(".deleteBtn").click(()->{
+				//	alert("경고");
+				//})
+				
+				// 수정확인
+				$(document).on("click",".confirmBtn",function(){
+					// rno,id-전역변수, rcontent 가져오면 됨.
+					alert("하단댓글을 수정합니다.");
+					updateFlag = 0;
+					rcontent = $(this).closest("ul").children(".txt").children(".replyType").val();
+					console.log("rcontent : ",rcontent);
+					//ajax
+					$.ajax({
+					
+						url:"/reply/confirm",
+						method:"put",
+						data:{"rno":rno,"rcontent":rcontent},
+						dataType:"json",
+						success:function(data){
+							
+							//변수
+							rno = data.rno;
+							rcontent = data.rcontent;
+							id = data.member.id;
+							rdate = data.rdate ;
+							// html소스를 추가
+							var dhtml = `
+								<li class="name">`+id+` <span>[`+rdate+`]</span></li>
+								<li class="txt">`+rcontent+`</li>
+								<li class="btn">
+									<a class="updateBtn rebtn">수정</a>
+									<a class="deleteBtn rebtn">삭제</a>
+								</li>
+							`;
+							
+							$("#"+rno).html(dhtml);
+						},
+						error:function(){
+							alert("실패");
+						}
+					});//ajax
+				});//confirmBtn			
+			
+			
+			
+			});//jquery
 		</script>
 
 					<!-- 댓글-->
@@ -164,7 +326,7 @@
 								<p class="password">비밀번호&nbsp;&nbsp;<input type="password" name="rpw" class="replynum" /></p>
 								<textarea name="rcontent" class="replyType"></textarea>
 							</li>
-							<li class="btn"><a onclick="replyBtn()" class="replyBtn">등록</a></li>
+							<li class="btn"><a class="replyBtn">등록</a></li>
 						</ul>
 						<p class="ntic">※ 비밀번호를 입력하시면 댓글이 비밀글로 등록 됩니다.</p>
 					</div>
