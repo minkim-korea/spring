@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="../layout/header.jsp" %>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script type="text/javascript">
 	if("${flag}" == "-1") alert("게시글이 삭제 되었습니다.");
 	if("${flag}" == "1") alert("게시글이 등록 되었습니다.");
@@ -35,43 +36,29 @@
 			<!-- contents -->
 			<div id="contents">
 				<div id="customer">
-					<h2><strong>NOTICE</strong><span>쟈뎅샵 소식을 전해드립니다.</span></h2>
+					<h2><strong>공공데이터</strong><span>쟈뎅샵 소식을 전해드립니다.</span></h2>
 					
 					<div class="orderDivMt">
 						<table summary="NO, 제목, 등록일, 조회수 순으로 공지사항을 조회 하실수 있습니다." class="orderTable2" border="1" cellspacing="0">
 							<caption>공지사항 보기</caption>
 							<colgroup>
 							<col width="10%" class="tnone" />
-							<col width="*" />
+							<col width="14%" />
+							<col width="17%" class="tw25" />
 							<col width="14%" class="tw25" />
-							<col width="14%" class="tw25" />
-							<col width="14%" class="tnone" />
+							<col width="28%" class="tnone" />
+							<col width="*" class="tnone" />
 							</colgroup>
 							<thead>
 								<th scope="col" class="tnone">NO.</th>
-								<th scope="col">제목</th>
-								<th scope="col">작성자</th>
-								<th scope="col">작성일</th>
-								<th scope="col" class="tnone">조회수</th>
+								<th scope="col">사진제목</th>
+								<th scope="col">촬영작가</th>
+								<th scope="col">촬영날짜</th>
+								<th scope="col" class="tnone">촬영지</th>
+								<th scope="col" class="tnone">사진</th>
 							</thead>
-							<tbody>
-								<c:forEach var="board" items="${list}">
-								<tr>
-									<td class="tnone">${board.bno}</td>
-									<td class="left">
-										<a href="/customer/view?bno=${board.bno}">
-										<c:forEach var="j" begin="1" end="${board.bindent}">▶</c:forEach>
-										${board.btitle}
-										</a>
-										<img src="/images/ico/ico_new.gif" alt="NEW" />
-									</td>
-									<td>${board.member.name }</td>
-									<td>
-									  <fmt:formatDate value="${board.bdate}" pattern="yyyy-MM-dd"/>
-									</td>
-									<td class="tnone right">${board.bhit}</td>
-								</tr>
-								</c:forEach>
+							<tbody id="tbody">
+								<!-- api 리스트 출력 -->
 
 							</tbody>
 						</table>
@@ -169,5 +156,51 @@
 		</div>
 	</div>
 	<!-- //container -->
+	
+	<!-- //공공데이터 api 가져오기 -->
+	<script>
+	  $.ajax({
+		 url:"/api/api",
+		 method:"get",
+		 data:{"page":"1"},
+		 dataType:"json",
+		 success:function(data){
+			 alert("공공데이터 api를 가져옵니다.");
+			 console.log(data);
+			 console.log("------------------")
+			 console.log(data.response.body.items.item);
+			 var dhtml = ``;
+			 var apiList = data.response.body.items.item; //item까지 해야 함.
+			 for(var i=0;i<apiList.length;i++){
+			 dhtml += `
+				 <tr>
+					<td class="tnone">`+apiList[i].galContentId+`</td>
+					<td class="left">`+apiList[i].galTitle+`</td>
+					<td>`+apiList[i].galPhotographer+`</td>
+					<td>`+apiList[i].galPhotographyMonth+`</td>
+					<td class="tnone right">`+apiList[i].galPhotographyLocation+`</td>
+					<td><img src='`+apiList[i].galWebImageUrl+`' width="50%"/></td>
+				</tr>
+			 `;
+			 }//for
+			 
+			 $("#tbody").html(dhtml);
+			 
+			 
+			 
+			 
+			 
+			 
+		 },
+		 error:function(){
+			 alert("실패");
+		 }
+		 
+	  });
+	</script>
+	
+	
+	
+	
 
 <%@ include file="../layout/footer.jsp" %>
